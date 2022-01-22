@@ -1,15 +1,20 @@
 public enum Suit {
-    HEARTS("Hearts"),
-    SPADES("Spades"),
     DIAMONDS("Diamonds"),
-    CLUBS("Clubs");
+    CLUBS("Clubs"),
+    HEARTS("Hearts"),
+    SPADES("Spades");
 
     private final String suit;
+
     Suit(String suit) {
         this.suit = suit;
     }
 
     public String getSuitString() {
         return suit;
+    }
+
+    public int getRank() {
+        return ordinal();
     }
 }

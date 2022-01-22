@@ -3,8 +3,6 @@ public enum Value {
      * 1. Hierarchy (2 > A > 3 > 4...)
      * 2. Intuition for the remaining cards (3, 4, 5...)
      */
-    ACE(14, "Ace"),
-    DEUCE(15, "Deuce"),
     THREE(3, "3"),
     FOUR(4, "4"),
     FIVE(5, "5"),
@@ -15,7 +13,9 @@ public enum Value {
     TEN(10, "10"),
     J(11, "Jack"),
     Q(12, "Queen"),
-    K(13, "King");
+    K(13, "King"),
+    ACE(1, "Ace"),
+    DEUCE(2, "Deuce");
 
     private final int value;
     private final String valueString;
@@ -28,6 +28,7 @@ public enum Value {
     public int getValue() {
         return this.value;
     }
+
     public String getValueString() {
         return this.valueString;
     }

@@ -1,7 +1,7 @@
 import javax.swing.*;
 import java.awt.*;
 
-public class Card {
+public class Card implements Comparable<Card> {
     private final Value value;
     private final Suit suit;
     private final ImageIcon image;
@@ -24,9 +24,21 @@ public class Card {
     public Value getValue() {
         return value;
     }
+    
+    public String getValueString() {
+        return value.getValueString();
+    }
+
+    public int getValueInt() {
+        return value.getValue();
+    }
 
     public Suit getSuit() {
         return suit;
+    }
+
+    public int getSuitRank() {
+        return suit.getRank();
     }
 
     public ImageIcon getImageIcon() {
@@ -34,15 +46,33 @@ public class Card {
         return image;
     }
 
-    public int getX() {
-        return x;
-    }
-
-    public int getY() {
-        return y;
-    }
-
     public String toString() {
         return value.getValueString() + " of " + suit.getSuitString();
+    }
+
+    @Override
+    // Note that since all cards are unique in the deck, returning 0 implies an error
+    public int compareTo(Card card) {
+        int thisValue = value.ordinal();
+        int thisSuitRank = suit.getRank();
+        int otherValue = card.getValue().ordinal();
+        int otherSuitRank = card.getSuitRank();
+        if (thisValue > otherValue) {
+            return 1;
+        }
+        if (thisValue == otherValue) {
+            if (thisSuitRank > otherSuitRank) {
+                return 1;
+            }
+            if (thisSuitRank < otherSuitRank) {
+                return -1;
+            }
+            else {
+                return 0;
+            }
+        }
+        else {
+            return -1;
+        }
     }
 }
