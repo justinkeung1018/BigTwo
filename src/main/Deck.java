@@ -24,7 +24,7 @@ public class Deck {
         return hand;
     }
 
-    // Currently only useful for testing out curr in Game class
+    // Currently only useful for testing out lastPlayedCards in Game class
     public ArrayList<Card> getDeck() {
         return deck;
     }

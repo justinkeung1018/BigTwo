@@ -16,7 +16,7 @@ public class RoyalFlush extends FiveCards {
         }
         ArrayList<Card> currSelected = curr.getSelected();
         Collections.sort(selected);
-        Collections.sort(currSelected); // Necessary? Will curr already be sorted?
+        Collections.sort(currSelected); // Necessary? Will lastPlayedCards already be sorted?
         Card largestSelectedCard = selected.get(selected.size() - 1);
         Card largestCurrCard = currSelected.get(currSelected.size() - 1);
         return largestSelectedCard.compareTo(largestCurrCard);

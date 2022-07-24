@@ -16,7 +16,7 @@ public class Flush extends FiveCards {
             return -1;
         }
         Collections.sort(selected);
-        Collections.sort(curr.getSelected()); // Necessary? Will curr already be sorted?
+        Collections.sort(curr.getSelected()); // Necessary? Will lastPlayedCards already be sorted?
         Card largestSelectedCard = selected.get(selected.size() - 1);
         Card largestCurrCard = curr.getSelected().get(curr.getSelected().size() - 1);
         return largestSelectedCard.compareTo(largestCurrCard);

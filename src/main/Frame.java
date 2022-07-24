@@ -5,13 +5,18 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class Frame extends JFrame implements ActionListener {
+public class Frame extends JFrame {
     JPanel mainPanel;
+    JPanel panel1;
+    JPanel panel2;
+    JPanel panel3;
+    JPanel panel4;
     JButton playButton;
     Hand hand;
-    ArrayList<Card> selected;
+    Game game;
 
-    public Frame(Hand hand) {
+
+    public Frame(Hand hand, Game game) {
         this.setTitle("Big Two");
         this.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         this.setResizable(false);
@@ -23,8 +28,7 @@ public class Frame extends JFrame implements ActionListener {
         mainPanel.setLayout(new BoxLayout(mainPanel, BoxLayout.Y_AXIS));
 
         this.hand = hand;
-
-        selected = new ArrayList<Card>();
+        this.game = game;
 
         this.add(mainPanel);
     }
@@ -66,7 +70,7 @@ public class Frame extends JFrame implements ActionListener {
             cardButton.setMargin(new Insets(0, 0, 0, 0));
             //cardButton.setBorder(null);
             cardButton.setIcon(card.getImageIcon());
-            cardButton.addActionListener(this);
+            cardButton.addActionListener(this.game);
             cardButton.putClientProperty("card", card);
             cardButton.putClientProperty("hand", hand);
             cardsPanel.add(cardButton);
@@ -78,7 +82,7 @@ public class Frame extends JFrame implements ActionListener {
     public void drawButton() {
         JPanel buttonPanel = new JPanel();
         playButton = new JButton("Play");
-        playButton.addActionListener(this);
+        playButton.addActionListener(this.game);
         buttonPanel.add(playButton);
         mainPanel.add(buttonPanel);
     }
@@ -94,26 +98,26 @@ public class Frame extends JFrame implements ActionListener {
         }
     }
 
-    @Override
-    public void actionPerformed(ActionEvent e) {
-        // If clicked button is a card
-        if (e.getSource() instanceof JToggleButton) {
-            JToggleButton cardButton = (JToggleButton) e.getSource();
-            Card card = (Card) cardButton.getClientProperty("card");
-            if (cardButton.isSelected()) {
-                selected.add(card);
-            } else {
-                selected.remove(card);
-            }
-
-        }
-
-        // If clicked button is the play button
-        if (e.getSource() instanceof JButton) {
-            hand.setSelected(selected);
-            for (Card card : hand.getSelected()) {
-                System.out.println(card);
-            }
-        }
-    }
+//    @Override
+//    public void actionPerformed(ActionEvent e) {
+//        // If clicked button is a card
+//        if (e.getSource() instanceof JToggleButton) {
+//            JToggleButton cardButton = (JToggleButton) e.getSource();
+//            Card card = (Card) cardButton.getClientProperty("card");
+//            if (cardButton.isSelected()) {
+//                selected.add(card);
+//            } else {
+//                selected.remove(card);
+//            }
+//
+//        }
+//
+//        // If clicked button is the play button
+//        if (e.getSource() instanceof JButton) {
+//            hand.setSelected(selected);
+//            for (Card card : hand.getSelected()) {
+//                System.out.println(card);
+//            }
+//        }
+//    }
 }

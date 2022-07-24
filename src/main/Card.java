@@ -12,8 +12,8 @@ public class Card implements Comparable<Card> {
     public Card(Value value, Suit suit) {
         this.value = value;
         this.suit = suit;
-        this.x = 100;
-        this.y = (int) (100 * 1.452);
+        this.x = 100; // Width of the card
+        this.y = (int) (100 * 1.452); // Height of the card
 
         ImageIcon tempImage = new ImageIcon("src/playing_cards/" + value.getValueString().toLowerCase() + "_of_" + suit.getSuitString().toLowerCase() + ".png");
         Image resizedImage = tempImage.getImage().getScaledInstance(this.x, this.y, java.awt.Image.SCALE_SMOOTH);
@@ -42,7 +42,7 @@ public class Card implements Comparable<Card> {
     }
 
     public ImageIcon getImageIcon() {
-        System.out.println("src/playing_cards/" + value.getValueString().toLowerCase() + "_of_" + suit.getSuitString().toLowerCase() + ".png");
+//        System.out.println("src/playing_cards/" + value.getValueString().toLowerCase() + "_of_" + suit.getSuitString().toLowerCase() + ".png");
         return image;
     }
 
