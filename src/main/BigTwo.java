@@ -6,7 +6,7 @@ import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
 
-public class Game extends JFrame implements ActionListener {
+public class BigTwo extends JFrame implements ActionListener {
     // GUI related objects
     JPanel mainPanel;
     JPanel panelH1 = new JPanel();
@@ -16,21 +16,23 @@ public class Game extends JFrame implements ActionListener {
     JPanel[] panelsForDifferentHands = {panelH1, panelH2, panelH3, panelH4};
     JButton playButton;
 
-    Hand h1 = new Hand(1);
-    Hand h2 = new Hand(2);
-    Hand h3 = new Hand(3);
-    Hand h4 = new Hand(4);
-    Hand[] hands = {h1, h2, h3, h4};
     CardLayout cl = new CardLayout();
-    Hand currHand; // Hand of whichever player is playing this turn
-    int currHandIndex;
-    Deck deck;
-    ArrayList<Card> lastPlayedCards; // Cards played in the previous round
-    FiveCards currObject;
-    ArrayList<Card> selected; // Cards selected by player playing this turn
 
-    public Game() {
-        this.setUp();
+    int currentPlayerId;
+    ArrayList<Card> lastPlayed;
+    Player[] players;
+
+
+    public BigTwo() {
+        currentPlayerId = 1;
+        lastPlayed = new ArrayList<>();
+        players = new Player[5]; // Size 5 for easier access by 1-indexing
+
+        // TODO: ask for user input and create Player instances. Dummy text for now.
+        for (int id = 1; id <= 4; id++) {
+            Player player = new Player("Bob", id);
+            players[id] = player;
+        }
 
         // Draws the frame
         this.setTitle("Big Two");
@@ -100,7 +102,7 @@ public class Game extends JFrame implements ActionListener {
     }
 
     public static void main(String[] args) {
-        new Game();
+        new BigTwo();
     }
 
     @Override
@@ -113,27 +115,6 @@ public class Game extends JFrame implements ActionListener {
         // If clicked button is the play button
         if (e.getSource() instanceof JButton) {
             playButtonClicked(e);
-        }
-    }
-
-    public void setUp() {
-        this.deck = new Deck();
-        this.selected = new ArrayList<Card>();
-        this.currHandIndex = 1;
-        this.currHand = hands[this.currHandIndex];
-
-        this.deck.shuffle();
-        // Tester for lastPlayedCards
-        this.lastPlayedCards = new ArrayList<Card>();
-        for (int i = 0; i < 1; i++) {
-            lastPlayedCards.add(deck.getDeck().get(i));
-        }
-
-        deck.shuffle();
-        for (Hand hand : hands) {
-            hand.setCards(deck.distribute());
-            for (Card card : hand.getCards()) {
-            }
         }
     }
 
@@ -228,6 +209,21 @@ public class Game extends JFrame implements ActionListener {
             }
             component.setFont(new Font("Arial", Font.PLAIN, 40));
         }
+    }
+
+    private ArrayList<Card> deck() {
+        ArrayList<Card> deck = new ArrayList<>();
+        for (Value value : Value.values()) {
+            for (Suit suit : Suit.values()) {
+                deck.add(new Card(value, suit));
+            }
+        }
+        Collections.shuffle(deck);
+        return deck;
+    }
+
+    private void distribute() {
+
     }
 
 
