@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Scanner;
 
 public class BigTwo extends JFrame implements ActionListener {
     // GUI related objects
@@ -28,11 +29,17 @@ public class BigTwo extends JFrame implements ActionListener {
         lastPlayed = new ArrayList<>();
         players = new Player[5]; // Size 5 for easier access by 1-indexing
 
-        // TODO: ask for user input and create Player instances. Dummy text for now.
+        Scanner scanner = new Scanner(System.in);
         for (int id = 1; id <= 4; id++) {
-            Player player = new Player("Bob", id);
+            String name;
+            while (!scanner.hasNext()) {
+                System.out.print("Player " + id + ", enter your name: " );
+            }
+            name = scanner.next();
+            Player player = new Player(name, id);
             players[id] = player;
         }
+        scanner.close();
 
         // Draws the frame
         this.setTitle("Big Two");
