@@ -1,4 +1,5 @@
 public interface GraphicsHandler {
+    public void setup();
 
     public void redraw();
 

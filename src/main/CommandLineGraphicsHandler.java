@@ -1,8 +1,7 @@
 public class CommandLineGraphicsHandler implements GraphicsHandler {
-    private BigTwo game;
+    @Override
+    public void setup() {
 
-    public CommandLineGraphicsHandler(BigTwo game) {
-        this.game = game;
     }
 
     public void redraw() {
