@@ -35,8 +35,8 @@ public class BigTwo {
         new BigTwo(graphicsHandler);
     }
 
-    private ArrayList<Card> deck() {
-        ArrayList<Card> deck = new ArrayList<Card>();
+    private List<Card> deck() {
+        List<Card> deck = new ArrayList<>();
         for (Value value : Value.values()) {
             for (Suit suit : Suit.values()) {
                 deck.add(new Card(value, suit));
@@ -47,7 +47,7 @@ public class BigTwo {
     }
 
     private void distribute() {
-        ArrayList<Card> deck = deck();
+        List<Card> deck = deck();
         int cardsPerPlayer = deck.size() / (players.length - 1);
         int cardsDistributed = 0;
         for (int id = 1; id < players.length; id++) {
