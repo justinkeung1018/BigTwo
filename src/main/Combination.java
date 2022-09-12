@@ -27,9 +27,23 @@ public class Combination {
             case 3 -> compareFullHouses(fiveCards1, fiveCards2);
             case 4 -> compareFourOfAKinds(fiveCards1, fiveCards2);
             case 5 -> compareRoyalFlushes(fiveCards1, fiveCards2);
-            default -> -1; // When combination is invalid
+            default -> Integer.MIN_VALUE; // When combination is invalid
         };
     }
+
+    /**
+     * Determines whether the cards form a valid combination of five cards.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form a valid combination of five cards.
+     */
+    public static boolean isValidFiveCards(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
+        return isStraight(cards) || isFlush(cards) || isFullHouse(cards) || isFourOfAKind(cards) || isRoyalFlush(cards);
+    }
+
     /**
      * Returns the relative rank of the combination of five cards.
      *
@@ -132,6 +146,9 @@ public class Combination {
      * @return Whether the cards form a Straight.
      */
     private static boolean isStraight(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
         return areConsecutive(cards) && !hasSameSuit(cards);
     }
 
@@ -144,6 +161,9 @@ public class Combination {
      * @return Whether the cards form a Flush.
      */
     private static boolean isFlush(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
         return hasSameSuit(cards) && !areConsecutive(cards);
     }
 
@@ -154,6 +174,9 @@ public class Combination {
      * @return Whether the cards form a Full House.
      */
     private static boolean isFullHouse(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
         Map<Value, Integer> count = count(cards);
         return count.size() == 2 && count.containsValue(2) && count.containsValue(3);
     }
@@ -165,6 +188,9 @@ public class Combination {
      * @return Whether the cards form a Four of a Kind.
      */
     private static boolean isFourOfAKind(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
         Map<Value, Integer> count = count(cards);
         return count.size() == 2 && count.containsValue(4) && count.containsValue(1);
     }
@@ -176,6 +202,9 @@ public class Combination {
      * @return Whether the cards form a Flush.
      */
     private static boolean isRoyalFlush(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
         return areConsecutive(cards) && hasSameSuit(cards);
     }
 
