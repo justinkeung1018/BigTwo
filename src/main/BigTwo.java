@@ -3,6 +3,7 @@ import javax.swing.border.EmptyBorder;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.List;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
@@ -71,40 +72,33 @@ public class BigTwo extends JFrame implements ActionListener {
         this.setVisible(true);
     }
 
-    public boolean isValid(ArrayList<Card> curr, ArrayList<Card> selected) {
+    public boolean isValid(List<Card> selected) {
+        if (lastPlayed.size() != selected.size() && lastPlayed.size() != 0) {
+            return false;
+        }
 
-        if (curr.size() == selected.size() || curr.size() == 0) {
-            if (curr.size() == 1 || curr.size() == 3) {
-                Card selectedCard = selected.get(0);
-                Card currCard = curr.get(0);
-                System.out.println(selectedCard.compareTo(currCard) > 0);
-                return selectedCard.compareTo(currCard) > 0;
-            }
+        if (lastPlayed.size() == 1 || lastPlayed.size() == 2 || lastPlayed.size() == 3) {
+            Collections.sort(lastPlayed);
+            Collections.sort(selected);
+            Card smallestLastPlayedCard = lastPlayed.get(0);
+            Card smallestSelectedCard = selected.get(0);
+            return smallestSelectedCard.compareTo(smallestLastPlayedCard) > 0;
+        }
 
-            if (curr.size() == 2) {
-                Collections.sort(selected);
-                Collections.sort(curr);
-                Card largestSelectedCard = selected.get(curr.size() - 1);
-                Card largestCurrCard = curr.get(curr.size() - 1);
-                return largestSelectedCard.compareTo(largestCurrCard) > 0;
-            }
+        if (selected.size() == 4) {
+            return false;
+        }
 
-            if (selected.size() == 4) {
-                return false;
-            }
-
-            if (selected.size() == 5) {
-                FiveCards[] combinations = {new RoyalFlush(selected), new FourOfAKind(selected), new FullHouse(selected), new Flush(selected), new Straight(selected)};
-                for (FiveCards combination : combinations) {
-                    if (combination.isValid()) {
-                        // TODO: turn lastPlayedCards into the appropriate FiveCards object and implement compareTo
-                        return combination.compareTo(currObject) > 0;
-                    }
+        if (selected.size() == 5) {
+            FiveCards[] combinations = {new RoyalFlush(selected), new FourOfAKind(selected), new FullHouse(selected), new Flush(selected), new Straight(selected)};
+            for (FiveCards combination : combinations) {
+                if (combination.isValid()) {
+                    // TODO: turn lastPlayedCards into the appropriate FiveCards object and implement compareTo
+                    return combination.compareTo(currObject) > 0;
                 }
             }
         }
 
-        System.out.println(false);
         return false;
     }
 
