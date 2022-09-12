@@ -21,8 +21,4 @@ public class RoyalFlush extends FiveCards {
         Card largestCurrCard = currSelected.get(currSelected.size() - 1);
         return largestSelectedCard.compareTo(largestCurrCard);
     }
-
-    public boolean isValid() {
-        return consecutiveValues(selected) && sameSuit(selected);
-    }
 }

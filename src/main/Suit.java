@@ -1,20 +1,22 @@
 public enum Suit {
-    DIAMONDS("Diamonds"),
-    CLUBS("Clubs"),
-    HEARTS("Hearts"),
-    SPADES("Spades");
+    DIAMONDS("Diamonds", 1),
+    CLUBS("Clubs", 2),
+    HEARTS("Hearts", 3),
+    SPADES("Spades", 4);
 
-    private final String suit;
+    private final String suitName;
+    private final int rank;
 
-    Suit(String suit) {
-        this.suit = suit;
+    Suit(String suitName, int rank) {
+        this.suitName = suitName;
+        this.rank = rank;
     }
 
-    public String getSuitString() {
-        return suit;
+    public String suitName() {
+        return suitName;
     }
 
-    public int getRank() {
-        return ordinal();
+    public int rank() {
+        return rank;
     }
 }

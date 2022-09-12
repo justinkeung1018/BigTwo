@@ -1,35 +1,31 @@
 public enum Value {
-    /* Ace is 14 instead of 1 and deuce is 15 instead of 2 to preserve:
-     * 1. Hierarchy (2 > A > 3 > 4...)
-     * 2. Intuition for the remaining cards (3, 4, 5...)
-     */
-    THREE(3, "3"),
-    FOUR(4, "4"),
-    FIVE(5, "5"),
-    SIX(6, "6"),
-    SEVEN(7, "7"),
-    EIGHT(8, "8"),
-    NINE(9, "9"),
-    TEN(10, "10"),
-    J(11, "Jack"),
-    Q(12, "Queen"),
-    K(13, "King"),
-    ACE(1, "Ace"),
-    DEUCE(2, "Deuce");
+    ACE("Ace", 12),
+    DEUCE("Deuce", 13),
+    THREE("3", 1),
+    FOUR("4", 2),
+    FIVE("5", 3),
+    SIX("6", 4),
+    SEVEN("7", 5),
+    EIGHT("8", 6),
+    NINE("9", 7),
+    TEN("10", 8),
+    J("Jack", 9),
+    Q("Queen", 10),
+    K("King", 11);
 
-    private final int value;
-    private final String valueString;
+    private final String valueName;
+    private final int rank;
 
-    Value(int value, String valueString) {
-        this.value = value;
-        this.valueString = valueString;
+    Value(String valueName, int rank) {
+        this.valueName = valueName;
+        this.rank = rank;
     }
 
-    public int getValue() {
-        return this.value;
+    public String valueName() {
+        return valueName;
     }
 
-    public String getValueString() {
-        return this.valueString;
+    public int rank() {
+        return rank;
     }
 }
