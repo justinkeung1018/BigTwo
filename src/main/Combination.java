@@ -8,51 +8,58 @@ import java.util.Map;
  * Rules are based on <a href="https://appsrv.cse.cuhk.edu.hk/~cscs/event/oldEventSites/cscup2012/games/6.html">...</a>
  */
 public class Combination {
-    public static int compareFiveCards(List<Card> selected, List<Card> lastPlayed) {
-        int selectedRank = rankOfFiveCards(selected);
-        int lastPlayedRank = rankOfFiveCards(lastPlayed);
-        if (selectedRank != lastPlayedRank) {
-            return Integer.compare(selectedRank, lastPlayedRank);
+    /**
+     * Compares two combinations of five cards.
+     *
+     * @param fiveCards1 The first combination of five cards.
+     * @param fiveCards2 The second combination of five cards.
+     * @return THe first combination of five cards compared to the second combination of five cards.
+     */
+    public static int compareFiveCards(List<Card> fiveCards1, List<Card> fiveCards2) {
+        int rank1 = rankOfFiveCards(fiveCards1);
+        int rank2 = rankOfFiveCards(fiveCards2);
+        if (rank1 != rank2) {
+            return Integer.compare(rank1, rank2);
         }
-        return switch (selectedRank) {
-            case 1 -> compareStraights(selected, lastPlayed);
-            case 2 -> compareFlushes(selected, lastPlayed);
-            case 3 -> compareFullHouses(selected, lastPlayed);
-            case 4 -> compareFourOfAKinds(selected, lastPlayed);
-            case 5 -> compareRoyalFlushes(selected, lastPlayed);
+        return switch (rank1) {
+            case 1 -> compareStraights(fiveCards1, fiveCards2);
+            case 2 -> compareFlushes(fiveCards1, fiveCards2);
+            case 3 -> compareFullHouses(fiveCards1, fiveCards2);
+            case 4 -> compareFourOfAKinds(fiveCards1, fiveCards2);
+            case 5 -> compareRoyalFlushes(fiveCards1, fiveCards2);
             default -> -1; // When combination is invalid
         };
     }
     /**
      * Returns the relative rank of the combination of five cards.
      *
-     * @param selected The selected cards.
+     * @param fiveCards The combination of five cards.
      * @return The relative rank of the combination of five cards.
      */
-    private static int rankOfFiveCards(List<Card> selected) {
-        if (selected.size() != 5) {
+    private static int rankOfFiveCards(List<Card> fiveCards) {
+        if (fiveCards.size() != 5) {
             throw new IllegalArgumentException("Number of cards selected must be five.");
         }
-        if (isStraight(selected)) return 1;
-        else if (isFlush(selected)) return 2;
-        else if (isFullHouse(selected)) return 3;
-        else if (isFourOfAKind(selected)) return 4;
-        else if (isRoyalFlush(selected)) return 5;
+        if (isStraight(fiveCards)) return 1;
+        else if (isFlush(fiveCards)) return 2;
+        else if (isFullHouse(fiveCards)) return 3;
+        else if (isFourOfAKind(fiveCards)) return 4;
+        else if (isRoyalFlush(fiveCards)) return 5;
         else return 0; // Invalid combination of five cards
     }
 
     /**
-     * Determines if all selected cards have the same suit.
+     * Determines if all cards have the same suit.
      *
-     * @param selected The selected cards.
-     * @return Whether all selected cards have the same suit.
+     * @param cards The cards.
+     * @return Whether all cards have the same suit.
      */
-    private static boolean hasSameSuit(List<Card> selected) {
-        if (selected.size() == 0) {
+    private static boolean hasSameSuit(List<Card> cards) {
+        if (cards.size() == 0) {
             throw new IllegalArgumentException("At least one card must be selected.");
         }
-        Suit suit = selected.get(0).getSuit();
-        for (Card card : selected) {
+        Suit suit = cards.get(0).getSuit();
+        for (Card card : cards) {
             if  (card.getSuit() != suit) {
                 return false;
             }
@@ -61,16 +68,16 @@ public class Combination {
     }
 
     /**
-     * Determines whether the selected cards are in consecutive order.
+     * Determines whether the cards are in consecutive order.
      *
-     * @param selected The selected cards.
-     * @return Whether the selected cards are in consecutive order.
+     * @param cards The cards.
+     * @return Whether the cards are in consecutive order.
      */
-    private static boolean areConsecutive(List<Card> selected) {
-        Collections.sort(selected);
+    private static boolean areConsecutive(List<Card> cards) {
+        Collections.sort(cards);
         int currValue = 0;
         boolean containsJQK = false;
-        for (Card card : selected) {
+        for (Card card : cards) {
             if (currValue == 0) {
                 currValue = card.getValueInt();
             } else {
@@ -96,14 +103,14 @@ public class Combination {
 
     /**
      * Counts the number of cards with each unique card value among the selected cards.
-     * Useful for determining if the selected cards form a Full House or Four of a Kind.
+     * Useful for determining if the cards form a Full House or Four of a Kind.
      *
-     * @param selected The selected cards.
+     * @param cards The cards.
      * @return A map with key being the card value and value being the number of cards having that value.
      */
-    private static Map<Value, Integer> count(List<Card> selected) {
+    private static Map<Value, Integer> count(List<Card> cards) {
         Map<Value, Integer> count = new HashMap<>();
-        for (Card card : selected) {
+        for (Card card : cards) {
             Value value = card.getValue();
             if (count.containsKey(value)) {
                 int valueCount = count.get(value);
@@ -117,59 +124,59 @@ public class Combination {
     }
 
     /**
-     * Determines whether the selected cards form a Straight.
-     * Note that a Royal Flush (i.e. the selected cards satisfying the criteria for both Straight and Flush)
+     * Determines whether the cards form a Straight.
+     * Note that a Royal Flush (i.e. the cards satisfying the criteria for both Straight and Flush)
      * does not form a Straight.
      *
-     * @param selected The selected cards.
-     * @return Whether the selected cards form a Straight.
+     * @param cards The cards.
+     * @return Whether the cards form a Straight.
      */
-    private static boolean isStraight(List<Card> selected) {
-        return areConsecutive(selected) && !hasSameSuit(selected);
+    private static boolean isStraight(List<Card> cards) {
+        return areConsecutive(cards) && !hasSameSuit(cards);
     }
 
     /**
-     * Determines whether the selected cards form a Flush.
-     * Note that a Royal Flush (i.e. the selected cards satisfying the criteria for both Straight and Flush)
+     * Determines whether the cards form a Flush.
+     * Note that a Royal Flush (i.e. the cards satisfying the criteria for both Straight and Flush)
      * does not form a Flush.
      *
-     * @param selected The selected cards.
-     * @return Whether the selected cards form a Flush.
+     * @param cards The cards.
+     * @return Whether the cards form a Flush.
      */
-    private static boolean isFlush(List<Card> selected) {
-        return hasSameSuit(selected) && !areConsecutive(selected);
+    private static boolean isFlush(List<Card> cards) {
+        return hasSameSuit(cards) && !areConsecutive(cards);
     }
 
     /**
-     * Determines whether the selected cards form a Full House.
+     * Determines whether the cards form a Full House.
      *
-     * @param selected The selected cards.
-     * @return Whether the selected cards form a Full House.
+     * @param cards The cards.
+     * @return Whether the cards form a Full House.
      */
-    private static boolean isFullHouse(List<Card> selected) {
-        Map<Value, Integer> count = count(selected);
+    private static boolean isFullHouse(List<Card> cards) {
+        Map<Value, Integer> count = count(cards);
         return count.size() == 2 && count.containsValue(2) && count.containsValue(3);
     }
 
     /**
-     * Determines whether the selected cards form a Four of a Kind.
+     * Determines whether the cards form a Four of a Kind.
      *
-     * @param selected The selected cards.
-     * @return Whether the selected cards form a Four of a Kind.
+     * @param cards The cards.
+     * @return Whether the cards form a Four of a Kind.
      */
-    private static boolean isFourOfAKind(List<Card> selected) {
-        Map<Value, Integer> count = count(selected);
+    private static boolean isFourOfAKind(List<Card> cards) {
+        Map<Value, Integer> count = count(cards);
         return count.size() == 2 && count.containsValue(4) && count.containsValue(1);
     }
 
     /**
-     * Determines whether the selected cards form a Royal Flush.
+     * Determines whether the cards form a Royal Flush.
      *
-     * @param selected The selected cards.
-     * @return Whether the selected cards form a Flush.
+     * @param cards The cards.
+     * @return Whether the cards form a Flush.
      */
-    private static boolean isRoyalFlush(List<Card> selected) {
-        return areConsecutive(selected) && hasSameSuit(selected);
+    private static boolean isRoyalFlush(List<Card> cards) {
+        return areConsecutive(cards) && hasSameSuit(cards);
     }
 
     /**
@@ -263,12 +270,12 @@ public class Combination {
      * Finds the card value with the specified number of cards.
      * Useful for comparing Full Houses and Four of a Kinds.
      *
-     * @param selected The selected cards.
+     * @param cards The selected cards.
      * @param numCards The number of cards with a certain value.
      * @return The card value with the specified number of cards. Null if no card value has the specified number of cards.
      */
-    private static Value valueWithNumCards(List<Card> selected, int numCards) {
-        Map<Value, Integer> count = count(selected);
+    private static Value valueWithNumCards(List<Card> cards, int numCards) {
+        Map<Value, Integer> count = count(cards);
         for (Map.Entry<Value, Integer> entry : count.entrySet()) {
             if (entry.getValue() == numCards) {
                 return entry.getKey();
