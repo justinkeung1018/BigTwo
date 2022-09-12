@@ -219,7 +219,7 @@ public class BigTwo extends JFrame implements ActionListener {
     }
 
     private ArrayList<Card> deck() {
-        ArrayList<Card> deck = new ArrayList<>();
+        ArrayList<Card> deck = new ArrayList<Card>();
         for (Value value : Value.values()) {
             for (Suit suit : Suit.values()) {
                 deck.add(new Card(value, suit));
@@ -230,7 +230,13 @@ public class BigTwo extends JFrame implements ActionListener {
     }
 
     private void distribute() {
-
+        ArrayList<Card> deck = deck();
+        int cardsPerPlayer = deck.size() / (players.length - 1);
+        int cardsDistributed = 0;
+        for (int id = 1; id < players.length; id++) {
+            players[id].setCards(deck.subList(cardsDistributed, cardsDistributed + cardsPerPlayer));
+            cardsDistributed += cardsPerPlayer;
+        }
     }
 
 
