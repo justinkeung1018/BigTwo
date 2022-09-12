@@ -9,6 +9,62 @@ import java.util.Map;
  */
 public class Combination {
     /**
+     * Compares two triples.
+     *
+     * @param pair1 The first triple.
+     * @param pair2 The second triple.
+     * @return The first triple compared to the second triple.
+     */
+    public static int comparePairs(List<Card> pair1, List<Card> pair2) {
+        assert(isValidTriple(pair1));
+        assert(isValidTriple(pair2));
+        int pair1ValueRank = pair1.get(0).getValue().rank();
+        int pair2ValueRank = pair2.get(0).getValue().rank();
+        return Integer.compare(pair1ValueRank, pair2ValueRank);
+    }
+
+    /**
+     * Determines whether the cards form a valid triple.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form a valid triple.
+     */
+    public static boolean isValidPair(List<Card> cards) {
+        if (cards.size() != 2) {
+            return false;
+        }
+        return hasSameValue(cards);
+    }
+
+    /**
+     * Compares two triples.
+     *
+     * @param triple1 The first triple.
+     * @param triple2 The second triple.
+     * @return The first triple compared to the second triple.
+     */
+    public static int compareTriples(List<Card> triple1, List<Card> triple2) {
+        assert(isValidTriple(triple1));
+        assert(isValidTriple(triple2));
+        int triple1ValueRank = triple1.get(0).getValue().rank();
+        int triple2ValueRank = triple2.get(0).getValue().rank();
+        return Integer.compare(triple1ValueRank, triple2ValueRank);
+    }
+
+    /**
+     * Determines whether the cards form a valid triple.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form a valid triple.
+     */
+    public static boolean isValidTriple(List<Card> cards) {
+        if (cards.size() != 3) {
+            return false;
+        }
+        return hasSameValue(cards);
+    }
+
+    /**
      * Compares two combinations of five cards.
      *
      * @param fiveCards1 The first combination of five cards.
@@ -70,11 +126,30 @@ public class Combination {
      */
     private static boolean hasSameSuit(List<Card> cards) {
         if (cards.size() == 0) {
-            throw new IllegalArgumentException("At least one card must be selected.");
+            throw new IllegalArgumentException("List of cards must not be empty.");
         }
         Suit suit = cards.get(0).getSuit();
         for (Card card : cards) {
             if  (card.getSuit() != suit) {
+                return false;
+            }
+        }
+        return true;
+    }
+
+    /**
+     * Determines if all cards have the same value.
+     *
+     * @param cards The cards.
+     * @return Whether all cards have the same value.
+     */
+    private static boolean hasSameValue(List<Card> cards) {
+        if (cards.size() == 0) {
+            throw new IllegalArgumentException("List of cards must not be empty.");
+        }
+        Value value = cards.get(0).getValue();
+        for (Card card : cards) {
+            if  (card.getValue() != value) {
                 return false;
             }
         }
