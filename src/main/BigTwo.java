@@ -233,6 +233,31 @@ public class BigTwo extends JFrame implements ActionListener {
         }
     }
 
+    /**
+     * Determines whether the player can play their selected cards.
+     *
+     * @param selected The selected cards.
+     * @return Whether the player can play their selected cards.
+     */
+    private boolean canPlay(List<Card> selected) {
+        if (selected.size() == 1) {
+            if (lastPlayed.size() == 0) {
+                return true;
+            }
+            Card selectedCard = selected.get(0);
+            Card lastPlayedCard = lastPlayed.get(0);
+            return selectedCard.compareTo(lastPlayedCard) > 0;
+        }
+        if (Combination.isValidPair(selected)) {
+            return lastPlayed.size() == 0 || Combination.comparePairs(selected, lastPlayed) > 0;
+        } else if (Combination.isValidTriple(selected)) {
+            return lastPlayed.size() == 0 || Combination.compareTriples(selected, lastPlayed) > 0;
+        } else if (Combination.isValidFiveCards(selected)) {
+            return lastPlayed.size() == 0 || Combination.compareFiveCards(selected, lastPlayed) > 0;
+        } else {
+            return false;
+        }
+    }
 
     /* Methods to implement
     * Calls out the person with 3 of Diamonds to play first
