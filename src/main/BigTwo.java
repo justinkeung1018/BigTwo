@@ -8,7 +8,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Scanner;
 
-public class BigTwo extends JFrame implements ActionListener {
+public class BigTwo {
     // GUI related objects
     JPanel mainPanel;
     JPanel panelH1 = new JPanel();

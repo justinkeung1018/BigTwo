@@ -1,7 +1,6 @@
-public abstract class GraphicsHandler {
-    private BigTwo game;
+public interface GraphicsHandler {
 
-    public abstract void redraw();
+    public void redraw();
 
-    public abstract void toggleSelection();
+    public void toggleSelection();
 }
