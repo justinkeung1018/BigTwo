@@ -7,6 +7,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestStraight {
+    TestCombination testCombination;
+
     List<Card> referenceStraight;
     List<Card> smallestStraight;
     List<Card> largestStraight;
@@ -20,6 +22,8 @@ public class TestStraight {
 
     @Before
     public void setUp() {
+        testCombination = new TestCombination();
+
         referenceStraight = Arrays.asList(
                 new Card(Value.FOUR, Suit.SPADES),
                 new Card(Value.FIVE, Suit.CLUBS),
@@ -130,9 +134,9 @@ public class TestStraight {
 
     @Test
     public void testCompareOtherFiveCards() {
-        assertEquals("Flush vs Straight", 1, Combination.compareFiveCards(TestCombination.flush(), largestStraight));
-        assertEquals("Full House vs Straight", 1, Combination.compareFiveCards(TestCombination.fullHouse(), largestStraight));
-        assertEquals("Four of a Kind vs Straight", 1, Combination.compareFiveCards(TestCombination.fourOfAKind(), largestStraight));
-        assertEquals("Royal Flush vs Straight", 1, Combination.compareFiveCards(TestCombination.royalFlush(), largestStraight));
+        assertEquals("Flush vs Straight", 1, Combination.compareFiveCards(testCombination.flush(), largestStraight));
+        assertEquals("Full House vs Straight", 1, Combination.compareFiveCards(testCombination.fullHouse(), largestStraight));
+        assertEquals("Four of a Kind vs Straight", 1, Combination.compareFiveCards(testCombination.fourOfAKind(), largestStraight));
+        assertEquals("Royal Flush vs Straight", 1, Combination.compareFiveCards(testCombination.royalFlush(), largestStraight));
     }
 }

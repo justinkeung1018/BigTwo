@@ -7,6 +7,8 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestFullHouse {
+    TestCombination testCombination;
+
     List<Card> referenceFullHouse;
     List<Card> largerFullHouse;
     List<Card> smallerFullHouse;
@@ -15,6 +17,8 @@ public class TestFullHouse {
 
     @Before
     public void setUp() {
+        testCombination = new TestCombination();
+
         // Compare: reference
         referenceFullHouse = Arrays.asList(
                 new Card(Value.ACE, Suit.DIAMONDS),
@@ -76,9 +80,9 @@ public class TestFullHouse {
 
     @Test
     public void testCompareOtherFiveCards() {
-        assertEquals("Straight vs Full House", -1, Combination.compareFiveCards(TestCombination.straight(), referenceFullHouse));
-        assertEquals("Flush vs Full House", -1, Combination.compareFiveCards(TestCombination.flush(), referenceFullHouse));
-        assertEquals("Four of a Kind vs Full House", 1, Combination.compareFiveCards(TestCombination.fourOfAKind(), referenceFullHouse));
-        assertEquals("Royal Flush vs Full House", 1, Combination.compareFiveCards(TestCombination.royalFlush(), referenceFullHouse));
+        assertEquals("Straight vs Full House", -1, Combination.compareFiveCards(testCombination.straight(), referenceFullHouse));
+        assertEquals("Flush vs Full House", -1, Combination.compareFiveCards(testCombination.flush(), referenceFullHouse));
+        assertEquals("Four of a Kind vs Full House", 1, Combination.compareFiveCards(testCombination.fourOfAKind(), referenceFullHouse));
+        assertEquals("Royal Flush vs Full House", 1, Combination.compareFiveCards(testCombination.royalFlush(), referenceFullHouse));
     }
 }
