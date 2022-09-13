@@ -164,30 +164,85 @@ public class Combination {
      */
     private static boolean areConsecutive(List<Card> cards) {
         Collections.sort(cards);
-        int currValue = 0;
-        boolean containsJQK = false;
+        if (isA2345(cards) || is23456(cards)) {
+            return true;
+        }
+        if (isJQKA2(cards)) {
+            return false;
+        }
+        int currentValueRank = cards.get(0).value().rank();
         for (Card card : cards) {
-            if (currValue == 0) {
-                currValue = card.value().rank();
-            } else {
-                int value = card.value().rank();
-                if (value % 13 != (currValue + 1) % 13) {
-                    return false;
-                }
-                currValue++;
-            }
-
-            // JQKA2, QKA23, and KA234 are illegal
-            Value value = card.value();
-            if (value == Value.J || value == Value.Q || value == Value.K) {
-                containsJQK = true;
-            }
-
-            if (containsJQK && value == Value.DEUCE) {
+            int valueRank = card.value().rank();
+            if (valueRank != currentValueRank) {
                 return false;
             }
+            currentValueRank++;
         }
         return true;
+    }
+
+    /**
+     * Determines whether the cards form the combination A2345.
+     * This is one of two special cases of consecutive cards as the ranks of the cards are not in ascending order, so
+     * sorting would result in the wrong order of 345A2.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form the combination A2345.
+     */
+    private static boolean isA2345(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
+        Collections.sort(cards);
+        boolean has3 = cards.get(0).value() == Value.THREE;
+        boolean has4 = cards.get(1).value() == Value.FOUR;
+        boolean has5 = cards.get(2).value() == Value.FIVE;
+        boolean hasA = cards.get(3).value() == Value.ACE;
+        boolean has2 = cards.get(4).value() == Value.DEUCE;
+
+        return has3 && has4 && has5 && hasA && has2;
+    }
+
+    /**
+     * Determines whether the cards form the combination 23456.
+     * This is one of two special cases of consecutive cards as the ranks of the cards are not in ascending order, so
+     * sorting would result in the wrong order of 34562.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form the combination 23456.
+     */
+    private static boolean is23456(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
+        boolean has3 = cards.get(0).value() == Value.THREE;
+        boolean has4 = cards.get(1).value() == Value.FOUR;
+        boolean has5 = cards.get(2).value() == Value.FIVE;
+        boolean has6 = cards.get(3).value() == Value.SIX;
+        boolean has2 = cards.get(4).value() == Value.DEUCE;
+
+        return has3 && has4 && has5 && has6 && has2;
+    }
+
+    /**
+     * Determines whether the cards form the combination JQKA2.
+     * This is a special case as the ranks of the cards are in ascending order, but they are not considered to be valid
+     * consecutive cards according to the rules.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form the combination 23456.
+     */
+    private static boolean isJQKA2(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
+        boolean hasJ = cards.get(0).value() == Value.J;
+        boolean hasQ = cards.get(1).value() == Value.Q;
+        boolean hasK = cards.get(2).value() == Value.K;
+        boolean hasA = cards.get(3).value() == Value.ACE;
+        boolean has2 = cards.get(4).value() == Value.DEUCE;
+
+        return hasJ && hasQ && hasK && hasA && has2;
     }
 
     /**
@@ -224,30 +279,7 @@ public class Combination {
         if (cards.size() != 5) {
             return false;
         }
-        return isA2345(cards) || areConsecutive(cards) && !hasSameSuit(cards);
-    }
-
-    /**
-     * Determines whether the cards form the combination A2345, the largest Straight.
-     * This is a special case of Straight as the ranks of the cards are not in ascending order, so sorting would result
-     * in the wrong order of 345A2. Although the ordinal of the Value enum can be used as a Comparator for sorting the
-     * list of cards, the work of setting this up is not worth it for this one edge case.
-     *
-     * @param cards The cards.
-     * @return Whether the cards form the combination A2345.
-     */
-    private static boolean isA2345(List<Card> cards) {
-        if (cards.size() != 5) {
-            return false;
-        }
-        Collections.sort(cards);
-        boolean has3 = cards.get(0).value() == Value.THREE;
-        boolean has4 = cards.get(1).value() == Value.FOUR;
-        boolean has5 = cards.get(2).value() == Value.FIVE;
-        boolean hasA = cards.get(3).value() == Value.ACE;
-        boolean has2 = cards.get(4).value() == Value.DEUCE;
-
-        return has3 && has4 && has5 && hasA && has2;
+        return areConsecutive(cards) && !hasSameSuit(cards);
     }
 
     /**
@@ -388,9 +420,11 @@ public class Combination {
      * @return The first Royal Flush compared to the second Royal Flush.
      */
     private static int compareRoyalFlushes(List<Card> royalFlush1, List<Card> royalFlush2) {
-        assert (isStraight(royalFlush1));
-        assert (isStraight(royalFlush2));
-        return compareStraights(royalFlush1, royalFlush2);
+        assert (isRoyalFlush(royalFlush1));
+        assert (isRoyalFlush(royalFlush2));
+        Card largestRoyalFlush1Card = Collections.max(royalFlush1);
+        Card largestRoyalFlush2Card = Collections.max(royalFlush2);
+        return largestRoyalFlush1Card.compareTo(largestRoyalFlush2Card);
     }
 
     /**
