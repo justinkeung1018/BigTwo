@@ -157,7 +157,6 @@ public class TestStraight {
         assertEquals("Transitive: largest vs middle", 1, Combination.compareFiveCards(largestStraight, middleStraight));
         assertEquals("Transitive: largest vs smallest", 1, Combination.compareFiveCards(largestStraight, smallestStraight));
         assertEquals("Reflexive", 0, Combination.compareFiveCards(middleStraight, middleStraight));
-        assertEquals("Connected: smallest vs largest", -1, Combination.compareFiveCards(smallestStraight, largestStraight));
     }
 
     @Test
