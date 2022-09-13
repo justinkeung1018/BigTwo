@@ -7,14 +7,10 @@ import java.util.List;
 import static org.junit.Assert.*;
 
 public class TestStraight {
+    List<Card> referenceStraight;
     List<Card> smallestStraight;
-    List<Card> middleStraight;
     List<Card> largestStraight;
     List<Card> largerSuitStraight; // Same values as smallestStraight, but card with the largest value has larger suit
-    List<Card> flush;
-    List<Card> fullHouse;
-    List<Card> fourOfAKind;
-    List<Card> royalFlush;
     List<Card> unsortedValidStraight;
     List<Card> notConsecutive;
     List<Card> fourCards;
@@ -24,20 +20,20 @@ public class TestStraight {
 
     @Before
     public void setUp() {
+        referenceStraight = Arrays.asList(
+                new Card(Value.FOUR, Suit.SPADES),
+                new Card(Value.FIVE, Suit.CLUBS),
+                new Card(Value.SIX, Suit.DIAMONDS),
+                new Card(Value.SEVEN, Suit.DIAMONDS),
+                new Card(Value.EIGHT, Suit.DIAMONDS)
+        );
+
         smallestStraight = Arrays.asList(
                 new Card(Value.FIVE, Suit.CLUBS),
                 new Card(Value.FOUR, Suit.SPADES),
                 new Card(Value.SIX, Suit.DIAMONDS),
                 new Card(Value.SEVEN, Suit.DIAMONDS),
                 new Card(Value.THREE, Suit.DIAMONDS)
-        );
-
-        middleStraight = Arrays.asList(
-                new Card(Value.FOUR, Suit.SPADES),
-                new Card(Value.FIVE, Suit.CLUBS),
-                new Card(Value.SIX, Suit.DIAMONDS),
-                new Card(Value.SEVEN, Suit.DIAMONDS),
-                new Card(Value.EIGHT, Suit.DIAMONDS)
         );
 
         largestStraight = Arrays.asList(
@@ -49,43 +45,11 @@ public class TestStraight {
         );
 
         largerSuitStraight = Arrays.asList(
-                new Card(Value.THREE, Suit.DIAMONDS),
-                new Card(Value.FOUR, Suit.SPADES),
-                new Card(Value.FIVE, Suit.CLUBS),
-                new Card(Value.SIX, Suit.DIAMONDS),
-                new Card(Value.SEVEN, Suit.SPADES)
-        );
-
-        flush = Arrays.asList(
-                new Card(Value.THREE, Suit.SPADES),
-                new Card(Value.FIVE, Suit.SPADES),
-                new Card(Value.SIX, Suit.SPADES),
-                new Card(Value.SEVEN, Suit.SPADES),
-                new Card(Value.DEUCE, Suit.SPADES)
-        );
-
-        fullHouse = Arrays.asList(
-                new Card(Value.ACE, Suit.DIAMONDS),
-                new Card(Value.ACE, Suit.SPADES),
-                new Card(Value.ACE, Suit.CLUBS),
-                new Card(Value.K, Suit.HEARTS),
-                new Card(Value.K, Suit.DIAMONDS)
-        );
-
-        fourOfAKind = Arrays.asList(
-                new Card(Value.THREE, Suit.DIAMONDS),
-                new Card(Value.THREE, Suit.SPADES),
-                new Card(Value.THREE, Suit.CLUBS),
-                new Card(Value.THREE, Suit.SPADES),
-                new Card(Value.DEUCE, Suit.CLUBS)
-        );
-
-        royalFlush = Arrays.asList(
-                new Card(Value.THREE, Suit.DIAMONDS),
                 new Card(Value.FOUR, Suit.DIAMONDS),
-                new Card(Value.FIVE, Suit.DIAMONDS),
-                new Card(Value.SIX, Suit.DIAMONDS),
-                new Card(Value.SEVEN, Suit.DIAMONDS)
+                new Card(Value.FIVE, Suit.SPADES),
+                new Card(Value.SIX, Suit.CLUBS),
+                new Card(Value.SEVEN, Suit.DIAMONDS),
+                new Card(Value.EIGHT, Suit.SPADES)
         );
 
         unsortedValidStraight = Arrays.asList(
@@ -138,8 +102,8 @@ public class TestStraight {
 
     @Test
     public void testIsValidFiveCards() {
+        assertTrue("Check isValidFiveCards", Combination.isValidFiveCards(referenceStraight));
         assertTrue("Check isValidFiveCards", Combination.isValidFiveCards(smallestStraight));
-        assertTrue("Check isValidFiveCards", Combination.isValidFiveCards(middleStraight));
         assertTrue("Check isValidFiveCards", Combination.isValidFiveCards(largestStraight));
         assertTrue("Check isValidFiveCards", Combination.isValidFiveCards(largerSuitStraight));
         assertTrue("Check isValidFiveCards", Combination.isValidFiveCards(unsortedValidStraight));
@@ -153,10 +117,10 @@ public class TestStraight {
 
     @Test
     public void testCompareByValue() {
-        assertEquals("Transitive: middle vs smallest", 1, Combination.compareFiveCards(middleStraight, smallestStraight));
-        assertEquals("Transitive: largest vs middle", 1, Combination.compareFiveCards(largestStraight, middleStraight));
+        assertEquals("Transitive: middle vs smallest", 1, Combination.compareFiveCards(referenceStraight, smallestStraight));
+        assertEquals("Transitive: largest vs middle", 1, Combination.compareFiveCards(largestStraight, referenceStraight));
         assertEquals("Transitive: largest vs smallest", 1, Combination.compareFiveCards(largestStraight, smallestStraight));
-        assertEquals("Reflexive", 0, Combination.compareFiveCards(middleStraight, middleStraight));
+        assertEquals("Reflexive", 0, Combination.compareFiveCards(referenceStraight, referenceStraight));
     }
 
     @Test
@@ -166,9 +130,9 @@ public class TestStraight {
 
     @Test
     public void testCompareOtherFiveCards() {
-        assertEquals("Flush vs Straight", 1, Combination.compareFiveCards(flush, largestStraight));
-        assertEquals("Full House vs Straight", 1, Combination.compareFiveCards(fullHouse, largestStraight));
-        assertEquals("Four of a Kind vs Straight", 1, Combination.compareFiveCards(fourOfAKind, largestStraight));
-        assertEquals("Royal Flush vs Straight", 1, Combination.compareFiveCards(royalFlush, largestStraight));
+        assertEquals("Flush vs Straight", 1, Combination.compareFiveCards(TestCombination.flush(), largestStraight));
+        assertEquals("Full House vs Straight", 1, Combination.compareFiveCards(TestCombination.fullHouse(), largestStraight));
+        assertEquals("Four of a Kind vs Straight", 1, Combination.compareFiveCards(TestCombination.fourOfAKind(), largestStraight));
+        assertEquals("Royal Flush vs Straight", 1, Combination.compareFiveCards(TestCombination.royalFlush(), largestStraight));
     }
 }
