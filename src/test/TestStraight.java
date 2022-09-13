@@ -166,7 +166,7 @@ public class TestStraight {
     }
 
     @Test
-    public void testCompareDiffFiveCards() {
+    public void testCompareOtherFiveCards() {
         assertEquals("Flush vs Straight", 1, Combination.compareFiveCards(flush, largestStraight));
         assertEquals("Full House vs Straight", 1, Combination.compareFiveCards(fullHouse, largestStraight));
         assertEquals("Four of a Kind vs Straight", 1, Combination.compareFiveCards(fourOfAKind, largestStraight));
