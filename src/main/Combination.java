@@ -16,10 +16,10 @@ public class Combination {
      * @return The first triple compared to the second triple.
      */
     public static int comparePairs(List<Card> pair1, List<Card> pair2) {
-        assert(isValidTriple(pair1));
-        assert(isValidTriple(pair2));
-        int pair1ValueRank = pair1.get(0).getValue().rank();
-        int pair2ValueRank = pair2.get(0).getValue().rank();
+        assert (isValidTriple(pair1));
+        assert (isValidTriple(pair2));
+        int pair1ValueRank = pair1.get(0).value().rank();
+        int pair2ValueRank = pair2.get(0).value().rank();
         return Integer.compare(pair1ValueRank, pair2ValueRank);
     }
 
@@ -44,10 +44,10 @@ public class Combination {
      * @return The first triple compared to the second triple.
      */
     public static int compareTriples(List<Card> triple1, List<Card> triple2) {
-        assert(isValidTriple(triple1));
-        assert(isValidTriple(triple2));
-        int triple1ValueRank = triple1.get(0).getValue().rank();
-        int triple2ValueRank = triple2.get(0).getValue().rank();
+        assert (isValidTriple(triple1));
+        assert (isValidTriple(triple2));
+        int triple1ValueRank = triple1.get(0).value().rank();
+        int triple2ValueRank = triple2.get(0).value().rank();
         return Integer.compare(triple1ValueRank, triple2ValueRank);
     }
 
@@ -128,9 +128,9 @@ public class Combination {
         if (cards.size() == 0) {
             throw new IllegalArgumentException("List of cards must not be empty.");
         }
-        Suit suit = cards.get(0).getSuit();
+        Suit suit = cards.get(0).suit();
         for (Card card : cards) {
-            if  (card.getSuit() != suit) {
+            if (card.suit() != suit) {
                 return false;
             }
         }
@@ -147,9 +147,9 @@ public class Combination {
         if (cards.size() == 0) {
             throw new IllegalArgumentException("List of cards must not be empty.");
         }
-        Value value = cards.get(0).getValue();
+        Value value = cards.get(0).value();
         for (Card card : cards) {
-            if  (card.getValue() != value) {
+            if (card.value() != value) {
                 return false;
             }
         }
@@ -168,9 +168,9 @@ public class Combination {
         boolean containsJQK = false;
         for (Card card : cards) {
             if (currValue == 0) {
-                currValue = card.getValueInt();
+                currValue = card.value().rank();
             } else {
-                int value = card.getValueInt();
+                int value = card.value().rank();
                 if (value % 13 != (currValue + 1) % 13) {
                     return false;
                 }
@@ -178,7 +178,7 @@ public class Combination {
             }
 
             // JQKA2, QKA23, and KA234 are illegal
-            Value value = card.getValue();
+            Value value = card.value();
             if (value == Value.J || value == Value.Q || value == Value.K) {
                 containsJQK = true;
             }
@@ -200,7 +200,7 @@ public class Combination {
     private static Map<Value, Integer> count(List<Card> cards) {
         Map<Value, Integer> count = new HashMap<>();
         for (Card card : cards) {
-            Value value = card.getValue();
+            Value value = card.value();
             if (count.containsKey(value)) {
                 int valueCount = count.get(value);
                 valueCount++;
@@ -224,7 +224,30 @@ public class Combination {
         if (cards.size() != 5) {
             return false;
         }
-        return areConsecutive(cards) && !hasSameSuit(cards);
+        return isA2345(cards) || areConsecutive(cards) && !hasSameSuit(cards);
+    }
+
+    /**
+     * Determines whether the cards form the combination A2345, the largest Straight.
+     * This is a special case of Straight as the ranks of the cards are not in ascending order, so sorting would result
+     * in the wrong order of 345A2. Although the ordinal of the Value enum can be used as a Comparator for sorting the
+     * list of cards, the work of setting this up is not worth it for this one edge case.
+     *
+     * @param cards The cards.
+     * @return Whether the cards form the combination A2345.
+     */
+    private static boolean isA2345(List<Card> cards) {
+        if (cards.size() != 5) {
+            return false;
+        }
+        Collections.sort(cards);
+        boolean has3 = cards.get(0).value() == Value.THREE;
+        boolean has4 = cards.get(1).value() == Value.FOUR;
+        boolean has5 = cards.get(2).value() == Value.FIVE;
+        boolean hasA = cards.get(3).value() == Value.ACE;
+        boolean has2 = cards.get(4).value() == Value.DEUCE;
+
+        return has3 && has4 && has5 && hasA && has2;
     }
 
     /**
@@ -291,8 +314,8 @@ public class Combination {
      * @return The first Straight compared to the second Straight.
      */
     private static int compareStraights(List<Card> straight1, List<Card> straight2) {
-        assert(isStraight(straight1));
-        assert(isStraight(straight2));
+        assert (isStraight(straight1));
+        assert (isStraight(straight2));
         Card largestStraight1Card = Collections.max(straight1);
         Card largestStraight2Card = Collections.max(straight2);
         return largestStraight1Card.compareTo(largestStraight2Card);
@@ -307,19 +330,19 @@ public class Combination {
      * @return The first Flush compared to the second Flush.
      */
     private static int compareFlushes(List<Card> flush1, List<Card> flush2) {
-        assert(isFlush(flush1));
-        assert(isFlush(flush2));
+        assert (isFlush(flush1));
+        assert (isFlush(flush2));
         Collections.sort(flush1);
         Collections.sort(flush2);
         for (int i = 4; i >= 0; i--) {
-            int largestFlush1ValueRank = flush1.get(i).getValue().rank();
-            int largestFlush2ValueRank = flush2.get(i).getValue().rank();
+            int largestFlush1ValueRank = flush1.get(i).value().rank();
+            int largestFlush2ValueRank = flush2.get(i).value().rank();
             if (largestFlush1ValueRank != largestFlush2ValueRank) {
                 return Integer.compare(largestFlush1ValueRank, largestFlush2ValueRank);
             }
         }
-        int flush1SuitRank = flush1.get(0).getSuit().rank();
-        int flush2SuitRank = flush2.get(0).getSuit().rank();
+        int flush1SuitRank = flush1.get(0).suit().rank();
+        int flush2SuitRank = flush2.get(0).suit().rank();
         return Integer.compare(flush1SuitRank, flush2SuitRank);
     }
 
@@ -331,12 +354,12 @@ public class Combination {
      * @return The first Full House compared to the second Full House.
      */
     private static int compareFullHouses(List<Card> fullHouse1, List<Card> fullHouse2) {
-        assert(isFullHouse(fullHouse1));
-        assert(isFullHouse(fullHouse2));
+        assert (isFullHouse(fullHouse1));
+        assert (isFullHouse(fullHouse2));
         Value triple1Value = valueWithNumCards(fullHouse1, 3);
-        assert(triple1Value != null);
+        assert (triple1Value != null);
         Value triple2Value = valueWithNumCards(fullHouse2, 3);
-        assert(triple2Value != null);
+        assert (triple2Value != null);
         return Integer.compare(triple1Value.rank(), triple2Value.rank());
     }
 
@@ -348,12 +371,12 @@ public class Combination {
      * @return The first Four of a Kind compared to the second Four of a Kind.
      */
     private static int compareFourOfAKinds(List<Card> fourOfAKind1, List<Card> fourOfAKind2) {
-        assert(isFourOfAKind(fourOfAKind1));
-        assert(isFourOfAKind(fourOfAKind2));
+        assert (isFourOfAKind(fourOfAKind1));
+        assert (isFourOfAKind(fourOfAKind2));
         Value quadruple1Value = valueWithNumCards(fourOfAKind1, 4);
-        assert(quadruple1Value != null);
+        assert (quadruple1Value != null);
         Value quadruple2Value = valueWithNumCards(fourOfAKind2, 4);
-        assert(quadruple2Value != null);
+        assert (quadruple2Value != null);
         return Integer.compare(quadruple1Value.rank(), quadruple2Value.rank());
     }
 
@@ -365,8 +388,8 @@ public class Combination {
      * @return The first Royal Flush compared to the second Royal Flush.
      */
     private static int compareRoyalFlushes(List<Card> royalFlush1, List<Card> royalFlush2) {
-        assert(isStraight(royalFlush1));
-        assert(isStraight(royalFlush2));
+        assert (isStraight(royalFlush1));
+        assert (isStraight(royalFlush2));
         return compareStraights(royalFlush1, royalFlush2);
     }
 
@@ -374,7 +397,7 @@ public class Combination {
      * Finds the card value with the specified number of cards.
      * Useful for comparing Full Houses and Four of a Kinds.
      *
-     * @param cards The selected cards.
+     * @param cards    The selected cards.
      * @param numCards The number of cards with a certain value.
      * @return The card value with the specified number of cards. Null if no card value has the specified number of cards.
      */
