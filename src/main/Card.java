@@ -45,6 +45,6 @@ public class Card implements Comparable<Card> {
         if (thisValueRank != otherValueRank) {
             return Integer.compare(thisValueRank, otherValueRank);
         }
-        return Integer.compare(otherValueRank, otherSuitRank);
+        return Integer.compare(thisSuitRank, otherSuitRank);
     }
 }
