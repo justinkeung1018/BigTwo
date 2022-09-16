@@ -121,10 +121,10 @@ public class BigTwo {
     private void distribute() {
         List<Card> deck = deck();
         int cardsPerPlayer = deck.size() / players.length;
-        int cardsDistributed = 0;
+        int distributed = 0;
         for (Player player : players) {
-            player.setCards(deck.subList(cardsDistributed, cardsDistributed + cardsPerPlayer));
-            cardsDistributed += cardsPerPlayer;
+            player.setCards(new ArrayList<Card>(deck.subList(distributed, distributed + cardsPerPlayer)));
+            distributed += cardsPerPlayer;
         }
     }
 }
