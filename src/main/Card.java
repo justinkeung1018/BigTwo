@@ -17,6 +17,11 @@ public class Card implements Comparable<Card> {
 //        this.image = new ImageIcon(resizedImage);
     }
 
+    public Card(Card card) {
+        this.value = card.value;
+        this.suit = card.suit;
+    }
+
     // Public methods
     public Value value() {
         return value;

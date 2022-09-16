@@ -27,7 +27,11 @@ public class BigTwo {
      */
     public void play() {
         Player player = players[currentPlayerId];
-        lastPlayed = player.selected();
+        lastPlayed.clear();
+        List<Card> selected = player.selected();
+        for (Card card : selected) {
+            lastPlayed.add(new Card(card));
+        }
         player.play();
         currentPlayerId = (currentPlayerId + 1) % 4;
         numPlayersPassed = 0;
