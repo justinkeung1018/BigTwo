@@ -31,9 +31,9 @@ public class Card implements Comparable<Card> {
 //        return image;
 //    }
 
-//    public String toString() {
-//        return value.getValueString() + " of " + suit.getSuitString();
-//    }
+    public String toString() {
+        return value.valueName() + " of " + suit.suitName();
+    }
 
     @Override
     // Note that since all cards are unique in the deck, returning 0 implies an error

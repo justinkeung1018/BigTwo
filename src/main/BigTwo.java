@@ -1,59 +1,36 @@
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.Scanner;
 
 public class BigTwo {
     int currentPlayerId;
-    ArrayList<Card> lastPlayed;
+    List<Card> lastPlayed;
     Player[] players;
-    GraphicsHandler graphicsHandler;
+    int numPlayersPassed;
 
-    public BigTwo(GraphicsHandler graphicsHandler) {
+    public BigTwo() {
         currentPlayerId = 1;
         lastPlayed = new ArrayList<>();
-        players = new Player[5]; // Size 5 for easier access by 1-indexing
-        this.graphicsHandler = graphicsHandler;
+        players = new Player[4];
+        numPlayersPassed = 0;
 
-        Scanner scanner = new Scanner(System.in);
-        for (int id = 1; id <= 4; id++) {
-            String name;
-            while (!scanner.hasNext()) {
-                System.out.print("Player " + id + ", enter your name: " );
-            }
-            name = scanner.next();
-            Player player = new Player(name, id);
+        for (int id = 0; id < 4; id++) {
+            Player player = new Player("Dummy", id);
             players[id] = player;
         }
-        scanner.close();
 
-        graphicsHandler.setup();
+        distribute();
     }
 
-    public static void main(String[] args) {
-        GraphicsHandler graphicsHandler = new SwingGraphicsHandler();
-        new BigTwo(graphicsHandler);
-    }
-
-    private List<Card> deck() {
-        List<Card> deck = new ArrayList<>();
-        for (Value value : Value.values()) {
-            for (Suit suit : Suit.values()) {
-                deck.add(new Card(value, suit));
-            }
-        }
-        Collections.shuffle(deck);
-        return deck;
-    }
-
-    private void distribute() {
-        List<Card> deck = deck();
-        int cardsPerPlayer = deck.size() / (players.length - 1);
-        int cardsDistributed = 0;
-        for (int id = 1; id < players.length; id++) {
-            players[id].setCards(deck.subList(cardsDistributed, cardsDistributed + cardsPerPlayer));
-            cardsDistributed += cardsPerPlayer;
-        }
+    /**
+     * Plays the selected cards of the current player.
+     */
+    public void play() {
+        Player player = players[currentPlayerId];
+        lastPlayed = player.selected();
+        player.play();
+        currentPlayerId = (currentPlayerId + 1) % 4;
+        numPlayersPassed = 0;
     }
 
     /**
@@ -62,7 +39,7 @@ public class BigTwo {
      * @param selected The selected cards.
      * @return Whether the player can play their selected cards.
      */
-    private boolean canPlay(List<Card> selected) {
+    public boolean canPlay(List<Card> selected) {
         if (selected.size() == 1) {
             if (lastPlayed.size() == 0) {
                 return true;
@@ -82,9 +59,72 @@ public class BigTwo {
         }
     }
 
-    /* Methods to implement
-    * Calls out the person with 3 of Diamonds to play first
-    * Checks if play is valid
-    * Determines if game is over (whoever's hand is empty)
+    /**
+     * Passes one round.
      */
+    public void pass() {
+        currentPlayerId = (currentPlayerId + 1) % 4;
+        numPlayersPassed++;
+        if (numPlayersPassed == 4) {
+            numPlayersPassed = 0;
+            lastPlayed.clear();
+        }
+    }
+
+    /**
+     * Determines the winner of the game. Null if there are no winners, i.e. the game has not ended.
+     * @return Winner of the game.
+     */
+    public Player winner() {
+        for (Player player : players) {
+            if (player.cards().isEmpty()) {
+                return player;
+            }
+        }
+        return null;
+    }
+
+    /**
+     * Returns the current player.
+     * @return The current player.
+     */
+    public Player currentPlayer() {
+        return players[currentPlayerId];
+    }
+
+    /**
+     * Returns the cards played in the previous round.
+     * @return The cards played in the previous round.
+     */
+    public List<Card> lastPlayed() {
+        return lastPlayed;
+    }
+
+    /**
+     * Generates a shuffled deck of 52 cards.
+     * @return A shuffled deck.
+     */
+    private List<Card> deck() {
+        List<Card> deck = new ArrayList<>();
+        for (Value value : Value.values()) {
+            for (Suit suit : Suit.values()) {
+                deck.add(new Card(value, suit));
+            }
+        }
+        Collections.shuffle(deck);
+        return deck;
+    }
+
+    /**
+     * Distributes a deck of 52 cards evenly among four players.
+     */
+    private void distribute() {
+        List<Card> deck = deck();
+        int cardsPerPlayer = deck.size() / players.length;
+        int cardsDistributed = 0;
+        for (Player player : players) {
+            player.setCards(deck.subList(cardsDistributed, cardsDistributed + cardsPerPlayer));
+            cardsDistributed += cardsPerPlayer;
+        }
+    }
 }
