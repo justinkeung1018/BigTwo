@@ -40,9 +40,14 @@ public class CommandLineUI implements UI {
             while (true) {
                 String input = scanner.nextLine();
                 if (input.isEmpty()) {
-                    boolean hasPlayed = tryPlay(player);
-                    if (hasPlayed) {
-                        break;
+                    if (game.play()) {
+                        List<Card> newLastPlayed = game.lastPlayed();
+                        System.out.println("You played:");
+                        for (Card card : newLastPlayed) {
+                            System.out.println(card);
+                        }
+                    } else {
+                        System.out.println("Error: your cards cannot be played. Please enter your cards again.");
                     }
                 } else if (input.equals("Abandon")) {
                     cls();
@@ -101,26 +106,6 @@ public class CommandLineUI implements UI {
             }
         }
         return null;
-    }
-
-    /**
-     * Tries to play the selected cards of the specified player.
-     * @param player The player.
-     * @return Whether the player successfully played their selected cards.
-     */
-    private boolean tryPlay(Player player) {
-        List<Card> selected = player.selected();
-        if (game.canPlay(selected)) {
-            System.out.println("You played:");
-            for (Card selectedCard : selected) {
-                System.out.println(selectedCard);
-            }
-            game.play();
-            return true;
-        } else {
-            System.out.println("Error: your cards cannot be played. Please enter your cards again.");
-            return false;
-        }
     }
 
     private void cls(){

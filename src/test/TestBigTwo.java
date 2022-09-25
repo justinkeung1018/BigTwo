@@ -4,8 +4,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.List;
 
-import static org.junit.Assert.assertEquals;
-import static org.junit.Assert.assertTrue;
+import static org.junit.Assert.*;
 
 public class TestBigTwo {
     BigTwo game;
@@ -15,6 +14,11 @@ public class TestBigTwo {
     Player player1a = new Player(1);
     Player player2a = new Player(2);
     Player player3a = new Player(3);
+
+    Player player0b = new Player(0);
+    Player player1b = new Player(1);
+    Player player2b = new Player(2);
+    Player player3b = new Player(3);
 
 
     public TestBigTwo() {
@@ -36,16 +40,20 @@ public class TestBigTwo {
         player3a.setCards(new ArrayList<Card>(Arrays.asList(
                 new Card(Value.ACE, Suit.SPADES)
         )));
-    }
 
-    @Test
-    public void testCanPlay() {
-        setPlayer(player0a);
-        setPlayer(player1a);
-        setPlayer(player2a);
-        setPlayer(player3a);
-        players[0].setSelection(new Card(Value.FOUR, Suit.DIAMONDS), true);
-        assertTrue("Can play", game.canPlay(players[0].selected()));
+        player0b.setCards(new ArrayList<Card>(Arrays.asList(
+                new Card(Value.DEUCE, Suit.SPADES),
+                new Card(Value.ACE, Suit.SPADES)
+        )));
+        player1b.setCards(new ArrayList<Card>(List.of(
+                new Card(Value.THREE, Suit.DIAMONDS)
+        )));
+        player2b.setCards(new ArrayList<Card>(List.of(
+                new Card(Value.FOUR, Suit.DIAMONDS)
+        )));
+        player3b.setCards(new ArrayList<Card>(List.of(
+                new Card(Value.FIVE, Suit.DIAMONDS)
+        )));
     }
 
     @Test
@@ -56,29 +64,44 @@ public class TestBigTwo {
         setPlayer(player3a);
         players[0].setSelection(new Card(Value.FOUR, Suit.DIAMONDS), true);
         game.play();
-        assertEquals("Number of last played cards", 1, game.lastPlayed().size());
-        assertEquals("Last played cards", List.of(new Card(Value.FOUR, Suit.DIAMONDS)), game.lastPlayed());
-        assertTrue("No cards selected", players[0].selected().isEmpty());
-        assertEquals("Played card removed from hand", 1, players[0].cards().size());
+        assertGameState(0, 1, List.of(new Card(Value.FOUR, Suit.DIAMONDS)), 0, 1);
         players[1].setSelection(new Card(Value.FIVE, Suit.DIAMONDS), true);
         game.play();
-        assertEquals("Number of last played cards", 1, game.lastPlayed().size());
-        assertEquals("Last played cards", List.of(new Card(Value.FIVE, Suit.DIAMONDS)), game.lastPlayed());
-        assertTrue("No cards selected", players[1].selected().isEmpty());
-        assertEquals("Played card removed from hand", 1, players[1].cards().size());
+        assertGameState(1, 1, List.of(new Card(Value.FIVE, Suit.DIAMONDS)), 0, 1);
         players[2].setSelection(new Card(Value.K, Suit.SPADES), true);
         game.play();
-        assertEquals("Number of last played cards", 1, game.lastPlayed().size());
-        assertEquals("Last played cards", List.of(new Card(Value.K, Suit.SPADES)), game.lastPlayed());
-        assertTrue("No cards selected", players[2].selected().isEmpty());
-        assertEquals("Played card removed from hand", 1, players[2].cards().size());
+        assertGameState(2, 1, List.of(new Card(Value.K, Suit.SPADES)), 0, 1);
         players[3].setSelection(new Card(Value.ACE, Suit.SPADES), true);
         game.play();
-        assertEquals("Number of last played cards", 1, game.lastPlayed().size());
-        assertEquals("Last played cards", List.of(new Card(Value.ACE, Suit.SPADES)), game.lastPlayed());
-        assertTrue("No cards selected", players[3].selected().isEmpty());
-        assertTrue("Played card removed from hand", players[3].cards().isEmpty());
+        assertGameState(3, 1, List.of(new Card(Value.ACE, Suit.SPADES)), 0, 0);
         assertEquals("Player 3 won", players[3], game.winner());
+
+        game = new BigTwo();
+        players = game.players();
+
+        setPlayer(player0b);
+        setPlayer(player1b);
+        setPlayer(player2b);
+        setPlayer(player3b);
+        players[0].setSelection(new Card(Value.DEUCE, Suit.SPADES), true);
+        game.play();
+        assertGameState(0, 1, List.of(new Card(Value.DEUCE, Suit.SPADES)), 0, 1);
+        players[1].setSelection(new Card(Value.THREE, Suit.DIAMONDS), true);
+        assertFalse("Cannot play", game.play());
+        game.pass();
+        assertGameState(1, 1, List.of(new Card(Value.DEUCE, Suit.SPADES)), 1, 1);
+        players[2].setSelection(new Card(Value.FOUR, Suit.DIAMONDS), true);
+        assertFalse("Cannot play", game.play());
+        game.pass();
+        assertGameState(2, 1, List.of(new Card(Value.DEUCE, Suit.SPADES)), 1, 1);
+        players[3].setSelection(new Card(Value.FIVE, Suit.DIAMONDS), true);
+        assertFalse("Cannot play", game.play());
+        game.pass();
+        assertGameState(3, 0, null, 1, 1);
+        players[0].setSelection(new Card(Value.ACE, Suit.SPADES), true);
+        game.play();
+        assertGameState(0, 1, List.of(new Card(Value.ACE, Suit.SPADES)), 0, 0);
+        assertEquals("Player 0 wins", players[0], game.winner());
     }
 
     private void setPlayer(Player player) {
@@ -89,5 +112,15 @@ public class TestBigTwo {
         for (Card card : player.selected()) {
             reference.setSelection(card, true);
         }
+    }
+
+    private void assertGameState(int id, int numLastPlayedCards, List<Card> lastPlayedCards, int numSelectedCards, int numCards) {
+        Player player = players[id];
+        assertEquals("Number of last played cards", numLastPlayedCards, game.lastPlayed().size());
+        if (lastPlayedCards != null) {
+            assertEquals("Last played cards", lastPlayedCards, game.lastPlayed());
+        }
+        assertEquals("Number of selected cards", numSelectedCards, player.selected().size());
+        assertEquals("Played card removed from hand", numCards, player.cards().size());
     }
 }

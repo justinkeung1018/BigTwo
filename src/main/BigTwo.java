@@ -24,17 +24,23 @@ public class BigTwo {
 
     /**
      * Plays the selected cards of the current player.
+     * @return Whether the player has successfully played their selected cards.
      */
-    public void play() {
+    public boolean play() {
         Player player = players[currentPlayerId];
-        lastPlayed.clear();
         List<Card> selected = player.selected();
+        if (!canPlay(selected)) {
+            return false;
+        }
+
+        lastPlayed.clear();
         for (Card card : selected) {
             lastPlayed.add(new Card(card));
         }
         player.play();
         currentPlayerId = (currentPlayerId + 1) % 4;
         numPlayersPassed = 0;
+        return true;
     }
 
     /**
@@ -43,7 +49,7 @@ public class BigTwo {
      * @param selected The selected cards.
      * @return Whether the player can play their selected cards.
      */
-    public boolean canPlay(List<Card> selected) {
+    private boolean canPlay(List<Card> selected) {
         if (selected.size() == 1) {
             if (lastPlayed.size() == 0) {
                 return true;
@@ -69,7 +75,7 @@ public class BigTwo {
     public void pass() {
         currentPlayerId = (currentPlayerId + 1) % 4;
         numPlayersPassed++;
-        if (numPlayersPassed == 4) {
+        if (numPlayersPassed == 3) {
             numPlayersPassed = 0;
             lastPlayed.clear();
         }
