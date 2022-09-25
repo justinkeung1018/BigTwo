@@ -20,7 +20,6 @@ public class TestBigTwo {
     Player player2b = new Player(2);
     Player player3b = new Player(3);
 
-
     public TestBigTwo() {
         game = new BigTwo();
         players = game.players();
