@@ -55,7 +55,7 @@ public class CommandLineUI implements UI {
                         System.out.println("Error: not a valid card.");
                         continue;
                     } else {
-                        player.toggleSelection(card);
+                        player.setSelection(card, true);
                         System.out.println(card);
                     }
                 }
