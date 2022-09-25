@@ -103,6 +103,10 @@ public class TestBigTwo {
         assertEquals("Player 0 wins", players[0], game.winner());
     }
 
+    /**
+     * Sets the properties of a player in the game instance to be those of a player with the same ID.
+     * @param player The player with the desired properties.
+     */
     private void setPlayer(Player player) {
         int id = player.id();
         Player reference = players[id];
@@ -113,6 +117,14 @@ public class TestBigTwo {
         }
     }
 
+    /**
+     * Asserts that the properties of the game state are as expected.
+     * @param id ID of the player to be checked.
+     * @param numLastPlayedCards The number of last played cards in the game.
+     * @param lastPlayedCards The list of last played cards. Pass in null if there are no last played cards, or if the last played cards have no effect anymore.
+     * @param numSelectedCards The number of cards selected by the specified player.
+     * @param numCards The number of cards held by the specified player.
+     */
     private void assertGameState(int id, int numLastPlayedCards, List<Card> lastPlayedCards, int numSelectedCards, int numCards) {
         Player player = players[id];
         assertEquals("Number of last played cards", numLastPlayedCards, game.lastPlayed().size());
