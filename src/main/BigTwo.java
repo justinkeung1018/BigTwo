@@ -9,13 +9,13 @@ public class BigTwo {
     int numPlayersPassed;
 
     public BigTwo() {
-        currentPlayerId = 1;
+        currentPlayerId = 0;
         lastPlayed = new ArrayList<>();
         players = new Player[4];
         numPlayersPassed = 0;
 
         for (int id = 0; id < 4; id++) {
-            Player player = new Player("Dummy", id);
+            Player player = new Player(id);
             players[id] = player;
         }
 
@@ -87,6 +87,12 @@ public class BigTwo {
         }
         return null;
     }
+
+    /**
+     * Returns an array containing all players.
+     * @return An array containing all players.
+     */
+    public Player[] players() { return players; }
 
     /**
      * Returns the current player.
