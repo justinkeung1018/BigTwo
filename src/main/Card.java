@@ -48,4 +48,13 @@ public class Card implements Comparable<Card> {
         }
         return Integer.compare(thisSuitRank, otherSuitRank);
     }
+
+    @Override
+    public boolean equals(Object card) {
+        if (card == this) return true;
+        if (card == null) return false;
+        if (card.getClass() != this.getClass()) return false;
+        Card that = (Card) card;
+        return this.compareTo(that) == 0;
+    }
 }
