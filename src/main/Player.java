@@ -2,20 +2,14 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class Player {
-    private final String name;
     private final int id;
     private List<Card> cards;
     private List<Card> selected;
 
-    public Player(String name, int id) {
-        this.name = name;
+    public Player(int id) {
         this.id = id;
         this.cards = new ArrayList<>();
         this.selected = new ArrayList<>();
-    }
-
-    public String name() {
-        return name;
     }
 
     public int id() {
@@ -43,17 +37,18 @@ public class Player {
     }
 
     /**
-     * Selects a card if the card has not been selected, deselects otherwise.
+     * Sets the selected state of a card.
      * @param card The card to be selected or deselected.
+     * @param isSelected Whether the card should be selected.
      */
-    public void toggleSelection(Card card) {
+    public void setSelection(Card card, boolean isSelected) {
         if (!cards.contains(card)) {
             throw new IllegalArgumentException("Player does not have the card.");
         }
-        if (selected.contains(card)) {
-            selected.remove(card);
-        } else {
+        if (isSelected && !selected.contains(card)) {
             selected.add(card);
+        } else if (!isSelected) {
+            selected.remove(card);
         }
     }
 }
