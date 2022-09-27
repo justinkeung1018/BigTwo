@@ -50,6 +50,9 @@ public class BigTwo {
      * @return Whether the player can play their selected cards.
      */
     private boolean canPlay(List<Card> selected) {
+        if (lastPlayed.size() != 0 && lastPlayed.size() != selected.size()) {
+            return false;
+        }
         if (selected.size() == 1) {
             if (lastPlayed.size() == 0) {
                 return true;
