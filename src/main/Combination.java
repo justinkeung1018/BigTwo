@@ -9,15 +9,15 @@ import java.util.Map;
  */
 public class Combination {
     /**
-     * Compares two triples.
+     * Compares two pairs.
      *
-     * @param pair1 The first triple.
-     * @param pair2 The second triple.
-     * @return The first triple compared to the second triple.
+     * @param pair1 The first pair.
+     * @param pair2 The second pair.
+     * @return The first pair compared to the second pair.
      */
     public static int comparePairs(List<Card> pair1, List<Card> pair2) {
-        assert (isValidTriple(pair1));
-        assert (isValidTriple(pair2));
+        assert (isValidPair(pair1));
+        assert (isValidPair(pair2));
         int pair1ValueRank = pair1.get(0).value().rank();
         int pair2ValueRank = pair2.get(0).value().rank();
         return Integer.compare(pair1ValueRank, pair2ValueRank);
